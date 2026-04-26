@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Mostafa — Creative direction and brand strategy. Four brands, four languages, one standard.">
+<meta name="theme-color" content="#0a0a0a">
+<title>Mostafa — Creative Portfolio</title>
+
+<!-- Preconnect for fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet">
+
+<!-- Preload first image (LCP) -->
+<link rel="preload" as="image" href="images/tommy.webp" fetchpriority="high">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink: #0a0a0a;
+  --paper: #f0ede8;
+  --gold: #b8956a;
+  --mid: #6b6460;
+  --rule: rgba(240,237,232,0.1);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--ink);
+  color: var(--paper);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* CUSTOM CURSOR */
+.cursor {
+  width: 8px;
+  height: 8px;
+  background: var(--gold);
+  border-radius: 50%;
+  position: fixed;
+  top: 0; left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  transition: transform 0.15s ease;
+}
+.cursor-ring {
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(184,149,106,0.5);
+  border-radius: 50%;
+  position: fixed;
+  top: 0; left: 0;
+  pointer-events: none;
+  z-index: 9998;
+  transition: transform 0.35s ease, width 0.3s, height 0.3s, border-color 0.3s;
+}
+
+/* HERO */
+.hero {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 6vh 7vw;
+  border-bottom: 1px solid var(--rule);
+}
+
+.hero-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  opacity: 0;
+  animation: fadeIn 0.8s 0.2s forwards;
+}
+
+.hero-tag {
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.hero-nav {
+  display: flex;
+  gap: 2.5rem;
+}
+
+.hero-nav a {
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--mid);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+.hero-nav a:hover { color: var(--paper); }
+
+.hero-main {
+  padding-bottom: 2vh;
+}
+
+.hero-counter {
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  color: var(--mid);
+  margin-bottom: 2.5rem;
+  opacity: 0;
+  animation: fadeIn 0.8s 0.5s forwards;
+}
+
+.hero-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(5rem, 13vw, 11rem);
+  font-weight: 300;
+  line-height: 0.88;
+  letter-spacing: -0.03em;
+  opacity: 0;
+  animation: slideUp 1s 0.6s cubic-bezier(0.16,1,0.3,1) forwards;
+}
+
+.hero-name em {
+  font-style: italic;
+  color: var(--gold);
+}
+
+.hero-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  opacity: 0;
+  animation: fadeIn 0.8s 1s forwards;
+}
+
+.hero-desc {
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mid);
+  max-width: 280px;
+  line-height: 1.8;
+}
+
+.hero-scroll-line {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.62rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--mid);
+}
+.hero-scroll-line::before {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 1px;
+  background: var(--gold);
+}
+
+/* CASES */
+.cases { padding: 0; }
+
+.case {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 92vh;
+  border-bottom: 1px solid var(--rule);
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1), transform 0.9s cubic-bezier(0.16,1,0.3,1);
+}
+
+.case.visible { opacity: 1; transform: translateY(0); }
+
+.case:nth-child(odd) { direction: ltr; }
+.case:nth-child(even) { direction: rtl; }
+.case:nth-child(even) .case-text { direction: ltr; }
+
+/* IMAGE SIDE */
+.case-image {
+  position: relative;
+  overflow: hidden;
+  background: #111;
+}
+
+.case-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  transition: transform 0.9s cubic-bezier(0.16,1,0.3,1);
+  filter: brightness(0.92);
+}
+
+.case:hover .case-image img {
+  transform: scale(1.04);
+}
+
+.case-image-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, transparent 60%, rgba(10,10,10,0.3));
+  pointer-events: none;
+}
+
+/* TEXT SIDE */
+.case-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 8vh 6vw;
+  position: relative;
+}
+
+.case-num {
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 3rem;
+}
+
+.case-brand {
+  font-size: 0.7rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--mid);
+  margin-bottom: 1.2rem;
+}
+
+.case-headline {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.2rem, 3.5vw, 4rem);
+  font-weight: 300;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-bottom: 3rem;
+}
+
+.case-headline em {
+  font-style: italic;
+  color: var(--gold);
+}
+
+.case-rule {
+  width: 40px;
+  height: 1px;
+  background: var(--gold);
+  margin-bottom: 2.5rem;
+}
+
+.case-section-label {
+  font-size: 0.6rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 1rem;
+}
+
+.case-body {
+  font-size: 0.88rem;
+  line-height: 1.85;
+  color: rgba(240,237,232,0.65);
+  max-width: 420px;
+  margin-bottom: 2.5rem;
+}
+
+.case-body-2-label {
+  font-size: 0.6rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 1rem;
+}
+
+.case-body-2 {
+  font-size: 0.88rem;
+  line-height: 1.85;
+  color: rgba(240,237,232,0.65);
+  max-width: 420px;
+}
+
+/* FOOTER */
+.footer {
+  padding: 10vh 7vw;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-top: 1px solid var(--rule);
+  opacity: 0;
+  animation: fadeIn 0.8s 0.3s forwards;
+  animation-play-state: paused;
+}
+.footer.visible { animation-play-state: running; }
+
+.footer-left {}
+
+.footer-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.5rem, 6vw, 5.5rem);
+  font-weight: 300;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  margin-bottom: 2.5rem;
+}
+
+.footer-title em {
+  font-style: italic;
+  color: var(--gold);
+}
+
+.footer-email {
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--mid);
+  text-decoration: none;
+  transition: color 0.3s;
+  display: block;
+  margin-bottom: 0.8rem;
+}
+.footer-email:hover { color: var(--gold); }
+
+.footer-copy {
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  color: rgba(107,100,96,0.5);
+}
+
+.footer-right {
+  text-align: right;
+}
+
+.footer-tag {
+  font-size: 0.62rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--mid);
+  line-height: 2;
+}
+
+
+/* ===================== */
+/* MOBILE                */
+/* ===================== */
+@media (max-width: 768px) {
+  body { cursor: auto; }
+  .cursor, .cursor-ring { display: none; }
+
+  .hero { padding: 5vh 6vw; }
+  .hero-nav { display: none; }
+  .hero-name { font-size: clamp(3.8rem, 18vw, 6rem); }
+
+  .case {
+    grid-template-columns: 1fr;
+    grid-template-rows: 55vw auto;
+    min-height: unset;
+    direction: ltr !important;
+  }
+
+  /* Image always on top on mobile */
+  .case-image { grid-row: 1; min-height: 55vw; }
+  .case-text {
+    grid-row: 2;
+    direction: ltr !important;
+    padding: 6vw 6vw 8vw;
+  }
+
+  .case-body, .case-body-2 { max-width: 100%; }
+
+  .footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 3rem;
+    padding: 8vh 6vw;
+  }
+  .footer-right { text-align: left; }
+}
+
+/* ANIMATIONS */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* PERFORMANCE */
+.case-image img { will-change: transform; }
+.case { contain: layout style; }
+.hero-name { will-change: opacity, transform; }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-top">
+    <span class="hero-tag">Creative Direction · Strategy</span>
+    <nav class="hero-nav">
+      <a href="#cases">Work</a>
+      <a href="#footer">Contact</a>
+    </nav>
+  </div>
+
+  <div class="hero-main">
+    <p class="hero-counter">04 cases — 2024/25</p>
+    <h1 class="hero-name">Mos<em>tafa</em></h1>
+  </div>
+
+  <div class="hero-bottom">
+    <p class="hero-desc">Brand strategy & creative direction for products that don't need to explain themselves.</p>
+    <span class="hero-scroll-line">Scroll</span>
+  </div>
+</section>
+
+<!-- CASES -->
+<section class="cases" id="cases">
+
+  <!-- 01 Tommy Hilfiger -->
+  <article class="case">
+    <div class="case-image">
+      <!-- Replace src with your image URL -->
+      <img src="images/tommy.webp" alt="Tommy Hilfiger — Wear the Standard" loading="eager" fetchpriority="high" decoding="async" width="900" height="1125">
+      <div class="case-image-overlay"></div>
+    </div>
+    <div class="case-text">
+      <p class="case-num">01 / 04</p>
+      <p class="case-brand">Tommy Hilfiger</p>
+      <h2 class="case-headline">"Wear the<br><em>Standard.</em>"</h2>
+      <div class="case-rule"></div>
+      <p class="case-section-label">The Strategic Decision</p>
+      <p class="case-body">Tommy doesn't sell clothes. It sells belonging to a certain standard. The decision was never to sell the polo itself — but to confirm that wearing it was the right choice all along. "Wear the Standard" isn't a command. It's a validation of something the customer already believes about themselves.</p>
+      <p class="case-body-2-label" style="margin-top:2rem">Why the Visual Works</p>
+      <p class="case-body-2">The product floats with no body — intentional. When there's no person, the viewer places themselves inside the polo automatically. The navy background isn't just a color choice, it's Tommy's DNA: classic American confidence. The small red line next to the headline isn't decoration — it's the Tommy flag reduced to a single stroke.</p>
+    </div>
+  </article>
+
+  <!-- 02 Nike -->
+  <article class="case">
+    <div class="case-image">
+      <img src="images/nike.webp" alt="Nike Air Jordan 1 — The ground feels you" loading="lazy" decoding="async" width="900" height="1125">
+      <div class="case-image-overlay"></div>
+    </div>
+    <div class="case-text">
+      <p class="case-num">02 / 04</p>
+      <p class="case-brand">Nike Air Jordan 1 Low Platform</p>
+      <h2 class="case-headline">"The ground<br><em>feels you.</em>"</h2>
+      <div class="case-rule"></div>
+      <p class="case-section-label">The Strategic Decision</p>
+      <p class="case-body">Jordan usually sells performance or street credibility. This ad flips both. The platform sole makes athleticism irrelevant — nobody's running in these. So the decision was to sell something quieter: presence. "The ground feels you" isn't about the shoe. It's about the woman wearing it. She doesn't enter a room. The room adjusts.</p>
+      <p class="case-body-2-label" style="margin-top:2rem">Why the Visual Works</p>
+      <p class="case-body-2">The warm beige background was a deliberate rejection of typical Jordan energy. That palette says this shoe lives in a different world. Quiet luxury, not hype culture. The platform is the hero of the shot, centered and architectural, almost sculptural. The headline sits bottom left — small, almost whispering. Because when you have that much presence, you don't need to shout.</p>
+    </div>
+  </article>
+
+  <!-- 03 Apple -->
+  <article class="case">
+    <div class="case-image">
+      <img src="images/apple.webp" alt="Apple MacBook Pro — Nothing to Prove" loading="lazy" decoding="async" width="900" height="1125">
+      <div class="case-image-overlay"></div>
+    </div>
+    <div class="case-text">
+      <p class="case-num">03 / 04</p>
+      <p class="case-brand">Apple MacBook Pro</p>
+      <h2 class="case-headline">"Nothing<br>to <em>Prove.</em>"</h2>
+      <div class="case-rule"></div>
+      <p class="case-section-label">The Strategic Decision</p>
+      <p class="case-body">Every laptop ad shows a screen. This one shows a back. That single decision is the entire strategy. No specs, no chip name, no performance claim. Because MacBook Pro buyers at this level aren't choosing between laptops — they've already decided. "Nothing to Prove" isn't confidence. It's the absence of the need for confidence. There's a difference.</p>
+      <p class="case-body-2-label" style="margin-top:2rem">Why the Visual Works</p>
+      <p class="case-body-2">Shooting from the back was a deliberate removal of information. No screen means no distraction, no context, no use case. Just the object and the logo. The cool gray background gives the aluminum nowhere to hide — and it doesn't need to. The headline sits below with generous white space, almost too much of it. That space isn't empty. It's the point.</p>
+    </div>
+  </article>
+
+  <!-- 04 Audemars Piguet -->
+  <article class="case">
+    <div class="case-image">
+      <img src="images/ap.webp" alt="Audemars Piguet — Measured in decades" loading="lazy" decoding="async" width="900" height="1125">
+      <div class="case-image-overlay"></div>
+    </div>
+    <div class="case-text">
+      <p class="case-num">04 / 04</p>
+      <p class="case-brand">Audemars Piguet Royal Oak</p>
+      <h2 class="case-headline">"Measured in<br>decades. <em>Signed<br>in two words.</em>"</h2>
+      <div class="case-rule"></div>
+      <p class="case-section-label">The Strategic Decision</p>
+      <p class="case-body">Rolex sells success. AP sells something harder to name. The decision was to find the one detail that separates AP from every other luxury watch — and that detail was "Swiss Made" printed at 6 o'clock. Two words. No explanation. The headline didn't describe the watch. It described the kind of person who notices those two words and understands exactly what they mean.</p>
+      <p class="case-body-2-label" style="margin-top:2rem">Why the Visual Works</p>
+      <p class="case-body-2">The extreme close-up forces the viewer to sit with the object — the Grande Tapisserie texture, the rose gold baton hands, the brushed case catching the side light. The black background removes every distraction. No lifestyle, no context, no occasion. Just the watch existing on its own terms. The headline lives inside the darkness, like something whispered.</p>
+    </div>
+  </article>
+
+</section>
+
+<!-- FOOTER -->
+<footer class="footer" id="footer">
+  <div class="footer-left">
+    <h2 class="footer-title">Let's make<br>something <em>real.</em></h2>
+    <a href="mailto:m49152646@gmail.com" class="footer-email">m49152646@gmail.com</a>
+    <p class="footer-copy">© 2025 Mostafa. All rights reserved.</p>
+  </div>
+  <div class="footer-right">
+    <p class="footer-tag">
+      Creative Direction<br>
+      Brand Strategy<br>
+      Visual Communication
+    </p>
+  </div>
+</footer>
+
+<script>
+// CURSOR
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let mx = 0, my = 0, rx = 0, ry = 0;
+
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursor.style.transform = `translate(${mx - 4}px, ${my - 4}px)`;
+});
+
+function animateRing() {
+  rx += (mx - rx) * 0.12;
+  ry += (my - ry) * 0.12;
+  ring.style.transform = `translate(${rx - 18}px, ${ry - 18}px)`;
+  requestAnimationFrame(animateRing);
+}
+animateRing();
+
+document.querySelectorAll('a, .case').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    ring.style.width = '60px';
+    ring.style.height = '60px';
+    ring.style.borderColor = 'rgba(184,149,106,0.8)';
+  });
+  el.addEventListener('mouseleave', () => {
+    ring.style.width = '36px';
+    ring.style.height = '36px';
+    ring.style.borderColor = 'rgba(184,149,106,0.5)';
+  });
+});
+
+// SCROLL REVEAL
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.12 });
+
+document.querySelectorAll('.case, .footer').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
